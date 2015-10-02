@@ -1,0 +1,25 @@
+{
+  "name": "ngChromeStorage",
+  "main": "ngChromeStorage.js",
+  "version": "0.0.1",
+  "authors": [
+    "dtuit"
+  ],
+  "description": "An AngularJS service for accessing chrome.storage",
+  "moduleType": [],
+  "keywords": [
+    "chrome",
+    "extension",
+    "storage",
+    "sync"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/dtuit/ngChromeStorage",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

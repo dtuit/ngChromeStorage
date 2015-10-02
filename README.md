@@ -34,7 +34,7 @@ here any changes made to `$scope.$store` , `$chromeStoreSync` and`chrome.storage
 ### Note
 *  Internally changes are detected by using `$rootScope.$watch` so be aware of the potential proformance issues.
 *  `chrome.storage` is an asynchronous API, and ngChromeStorage gives it a seemingly synchronous interface.
-* [`chrome.storage.sync`](https://developer.chrome.com/extensions/storage#property-sync) has limitations that you must be mindful of note are.
+* [`chrome.storage.sync`](https://developer.chrome.com/extensions/storage#property-sync) has limitations that you must be mindful of, with ngChromeStorage it is easy to exceed these limits.
   * `MAX_WRITE_OPERATIONS_PER_MINUTE` 120 
   * `MAX_WRITE_OPERATIONS_PER_HOUR` 1,800
   * `QUOTA_BYTES_PER_ITEM` 8,192
