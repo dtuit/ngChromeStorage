@@ -6,7 +6,8 @@ An [AngularJS](https://github.com/angular/angular.js) module for [chrome.storage
 * **Two-way binding** no need to use getters and setters, storage objects appear as plain old JavaScript objects.
 
 ###Install
-####bower : `bower install ngChromeStorage`
+#####bower : 
+`bower install ngChromeStorage`
 
 ###Usage
 ```javascript
