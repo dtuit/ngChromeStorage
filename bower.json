@@ -5,6 +5,9 @@
   "authors": [
     "dtuit"
   ],
+  "dependencies" :{
+	  "angular" : "~1.4.7"
+  },
   "description": "An AngularJS service for accessing chrome.storage",
   "moduleType": [],
   "keywords": [
