@@ -1,11 +1,10 @@
 'use strict';
 (function() {
-    angular.module('ngChromeStorage', [])
-    	.provider('$chromeStoreSync', _storageProvider('sync'))
-    	.provider('$chromeStoreLocal', _storageProvider('local'));
+    angular.module('ngChromeStorage', []).provider('$chromeStoreSync', _storageProvider('sync')).provider('$chromeStoreLocal', _storageProvider('local'));
 
     function _storageProvider(storageArea) {
         return function() {
+            
             var storageKeyPrefix = 'ngCStore-';
             this.setKeyPrefix = function(prefix) {
                 if (typeof prefix != 'string') {
@@ -19,15 +18,10 @@
             this.set = function(data, callback) {
                 chrome.storage[storageArea].set(data, callback);
             };
-            this.$get = 
-            	['$rootScope',
-            	 '$log',
-            	 '$q',
-                function(
-                	$rootScope,
-                	$log,
-                	$q
-                	){
+
+            this.$get = ['$rootScope', '$log', '$q',
+                function($rootScope, $log, $q) {
+
                     function getStorageArea(storageArea) {
                         try {
                             chrome.storage[storageArea];
@@ -43,18 +37,15 @@
 
                     var $storage = {
                         $default: function(items) {
-
-                            return $storage.$pull().then(function(res){
-                            	for (var k in items) {
-	                                if (!angular.isDefined($storage[k])) {
-	                                    $storage[k] = angular.copy(items[k]);
-	                                }
-	                            }
-	                            return res;
+                            return $storage.$pull().then(function(res) {
+                                for (var k in items) {
+                                    if (!angular.isDefined($storage[k])) {
+                                        $storage[k] = angular.copy(items[k]);
+                                    }
+                                }
+                                return res;
                             });
-
                             // var defered = $q.defer();
-
                             // for (var k in items) {
                             //     if (!angular.isDefined($storage[k])) {
                             //         $storage[k] = angular.copy(items[k]);
@@ -78,42 +69,42 @@
                             return defered.promise;
                         },
                         $push: function() {
-                        	// var defered = $q.defer();
-
-							var lastKeys = Object.keys( _lastStorage).filter(function(v){return v[0] != '$' ? true : false;});
-							var data = {};
-							angular.forEach($storage, function(v, k) {
-								if(angular.isDefined(v) && '$' !== k[0] && !angular.equals($storage[k], _lastStorage[k])){
-									data[storageKeyPrefix + k] = v;
-								}
-								for( var i =0; i < lastKeys.length; i++ ){
-									if( k == lastKeys[i] ){
-										lastKeys.splice(i,1);
-									}
-								}		
-							});
-							if(!angular.equals(data, {})){
-								chromeStorage.set(data, function(){
-								});
-							}
-							if(!angular.equals(lastKeys, [])){
-								chromeStorage.remove(lastKeys.map(function(k){return storageKeyPrefix+k}));
-							};
-							_lastStorage = angular.copy($storage);
+                            // var defered = $q.defer();
+                            var lastKeys = Object.keys(_lastStorage).filter(function(v) {
+                                return v[0] != '$' ? true : false;
+                            });
+                            var data = {};
+                            angular.forEach($storage, function(v, k) {
+                                if (angular.isDefined(v) && '$' !== k[0] && !angular.equals($storage[k], _lastStorage[k])) {
+                                    data[storageKeyPrefix + k] = v;
+                                }
+                                for (var i = 0; i < lastKeys.length; i++) {
+                                    if (k == lastKeys[i]) {
+                                        lastKeys.splice(i, 1);
+                                    }
+                                }
+                            });
+                            if (!angular.equals(data, {})) {
+                                chromeStorage.set(data, function() {});
+                            }
+                            if (!angular.equals(lastKeys, [])) {
+                                chromeStorage.remove(lastKeys.map(function(k) {
+                                    return storageKeyPrefix + k
+                                }));
+                            };
+                            _lastStorage = angular.copy($storage);
                         },
-						$reset: function(items) {
-							var oldKeys = [];
-
-							for(var k in $storage){
-								if (k[0] !== '$'){
-									delete $storage[k];
-									oldKeys.push( storageKeyPrefix + k);
-								}
-							}
-							chromeStorage.remove(oldKeys, function(){});
-
-							return $storage.$default(items);
-						},
+                        $reset: function(items) {
+                            var oldKeys = [];
+                            for (var k in $storage) {
+                                if (k[0] !== '$') {
+                                    delete $storage[k];
+                                    oldKeys.push(storageKeyPrefix + k);
+                                }
+                            }
+                            chromeStorage.remove(oldKeys, function() {});
+                            return $storage.$default(items);
+                        },
                         $getBytesInUse: function(keys) {
                             var defered = $q.defer();
                             chromeStorage.getBytesInUse(keys, function(n) {
@@ -121,29 +112,26 @@
                             });
                             return defered.promise;
                         },
-                        $ChromeStoreApi : chromeStorage
-                        
+                        $ChromeStoreApi: chromeStorage
                     };
-
-                    $rootScope.$watch(function(){
-                    	$storage.$push();
+                    
+                    $rootScope.$watch(function() {
+                        $storage.$push();
                     });
 
-                    chrome.storage.onChanged.addListener(function(changes, nameSpace){
-						if(nameSpace == storageArea){
-							angular.forEach(changes, function(v, k){
-								if (storageKeyPrefix === k.slice(0, prefixLength)) {
-									v.newValue ? $storage[k.slice(prefixLength)] = v.newValue : delete $storage[k.slice(prefixLength)];
-									_lastStorage = angular.copy($storage);
-									
-									$rootScope.$apply();
-								}
-							});
-						}
-					});
+                    chrome.storage.onChanged.addListener(function(changes, nameSpace) {
+                        if (nameSpace == storageArea) {
+                            angular.forEach(changes, function(v, k) {
+                                if (storageKeyPrefix === k.slice(0, prefixLength)) {
+                                    v.newValue ? $storage[k.slice(prefixLength)] = v.newValue : delete $storage[k.slice(prefixLength)];
+                                    _lastStorage = angular.copy($storage);
+                                    $rootScope.$apply();
+                                }
+                            });
+                        }
+                    });
 
-					return $storage;
-
+                    return $storage;
                 }
             ];
         };
