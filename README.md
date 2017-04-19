@@ -5,11 +5,11 @@ An [AngularJS](https://github.com/angular/angular.js) module for [chrome.storage
 ###Features
 * **Two-way binding** no need to use getters and setters, storage objects appear as plain old JavaScript objects.
 
-###Install
-#####bower : 
+### Install
+##### bower : 
 `bower install ngChromeStorage`
 
-###Usage
+### Usage
 ```javascript
 angular.module('app', [
     'ngChromeStorage'
@@ -19,7 +19,7 @@ angular.module('app', [
     $chromeStoreLocal
 ){});
 ```
-####Read and Write
+#### Read and Write
 Pass `$chromeStoreSync` and/or`$chromeStoreLocal` and attach to scope
 ```javascript
 $scope.$store = $chromeStoreSync
